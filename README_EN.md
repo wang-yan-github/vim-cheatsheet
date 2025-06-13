@@ -112,7 +112,7 @@ gf                  # Open the file whose name is the file name under the cursor
 
 
 
-## Insert mode  
+## Insert mode
 
 ```bash
 i                   # Enter insert mode at the cursor
@@ -200,7 +200,7 @@ Ctrl+X Ctrl+O       # Insert Omnifunc completion
 
 
 
-## Text editor
+## Changes
 
 ```bash
 r                   # Replace the current character
@@ -317,12 +317,12 @@ Nt)                 # Move to the Nth parenthesis
 **The text object can be simply summarized as:**
 
 ```bash
-ci'、ci"、ci(、ci[、ci{、ci<                 # Change the text content in these paired punctuation marks separately
-di'、di"、di(、dib、di[、di{、diB、di<        # Delete the text content in these paired punctuation marks respectively
-yi'、yi"、yi(、yi[、yi{、yi<                 # Copy the text content of these paired punctuation marks separately
-vi'、vi"、vi(、vi[、vi{、vi<                 # Select the text content in these paired punctuation marks respectively
+ci', ci", ci(, ci[, ci{, ci<                 # Change the text content in these paired punctuation marks separately
+di', di", di(, dib, di[, di{, diB, di<       # Delete the text content in these paired punctuation marks respectively
+yi', yi", yi(, yi[, yi{, yi<                 # Copy the text content of these paired punctuation marks separately
+vi', vi", vi(, vi[, vi{, vi<                 # Select the text content in these paired punctuation marks respectively
 ```
-cit、dit、yit、vit，Operate the content between a pair of tags separately, and edit HTML and XML are easy to use! In addition, if you change the above i to a, you can operate the matching punctuation and the content in the matching punctuation at the same time.
+cit, dit, yit, vit, Operate the content between a pair of tags separately, and edit HTML and XML are easy to use! In addition, if you change the above i to a, you can operate the matching punctuation and the content in the matching punctuation at the same time.
 
 
 
@@ -362,8 +362,9 @@ gqap                      # Format the current paragraph
 gq[N]ap                   # Format [count] paragraphs
 gq[N]j                    # Format the current line and the following [count] lines
 gqQ                       # Format before the paragraph to the end of the text
-J                         # Join [count] lines, with a minimum of two lines
-gj                        # [count] display lines downward
+[N]J                      # Join [N] lines, with a minimum of two lines
+{Visual}J		          # Join the highlighted lines, with a minimum of two lines. Remove the indent and insert up to two space
+gJ                        # Join [count] lines, with a minimum of two lines. Don't insert or remove any spaces
 ==                        # Filter [count] lines like with ={motion}
 ```
 
@@ -371,16 +372,16 @@ gj                        # [count] display lines downward
 
 ## Copy and paste
 
-**Format of the copy command**：
+**Format of the copy command**: 
 
 ```bash
 :[range]co[py]{address}
 ```
 
-Parameter Description：
+Parameter Description: 
 
-- [range]：Indicates the range of lines to be copied, where copy can be abbreviated as :co or :t
-- {address}：Indicates the destination of the copy. Both of these parameters can be defaulted to indicate the current line where the Vim cursor is located.
+- [range]: Indicates the range of lines to be copied, where copy can be abbreviated as :co or :t
+- {address}: Indicates the destination of the copy. Both of these parameters can be defaulted to indicate the current line where the Vim cursor is located.
 
 > For example: [:5copy.] means to copy line 5 of the file currently opened by Vim to the current line (indicated by .), that is, to create a copy of line 5 and place it below the current line.
 
@@ -479,10 +480,10 @@ Note: The <Esc> key can abort most commands.
 :[range]s[ubstitute]/{pattern}/{string}/[flags]
 ```
 
-Parameter Description：
-- pattern：It is the string to be replaced, which can be represented by regexp.
-- string：Replace pattern by string.
-- [range]：There are the following values.
+Parameter description: 
+- pattern: It is the string to be replaced, which can be represented by regexp.
+- string: Replace pattern by string.
+- [range]: There are the following values.
 
 | [range] value | Description                                         |
 | ----------  | ----------------------------------------------------- |
@@ -629,7 +630,7 @@ vim +/target file   # Open file and move the cursor to the first target string f
 :wqall              # Save all files and exit
 :q                  # Close the window where the cursor is located and exit (q: quit)
 :q!                 # Force quit (q: quit)
-:qa！               # Abandon all file operations and force exit
+:qa!                # Abandon all file operations and force exit
 :qall               # Abandon all file operations and exit
 :x                  # Save the file and exit, the time stamp of the file will not be modified  
 ZZ                  # Save the changed file, and close the exit window
@@ -667,24 +668,65 @@ ZQ                  # Close the window without saving the file
 
 
 
-## Opened file operation
+## Buffer
 
 ```bash
-:ls                 # Investigation cache list
-:bn                 # Switch to the next cache
-:bp                 # Switch to the previous cache
-:bd                 # Delete cache
-:b 1                # Switch to cache 1
-:b abc              # Switch to the cache whose file name starts with abc
-:badd {filename}    # Add files to the cache list
-:set hidden         # Set hidden mode (unsaved cache can be switched away or closed)
-:set nohidden       # Turn off the hidden mode (unsaved cache cannot be switched away or closed)
-n Ctrl+^            # To switch the cache, enter the numeric cache number first, then press Ctrl+6
+:ls                 # Show all buffers
+:files              # Show all buffers
+:buffers            # Show all buffers
+:ls [flags]         # View the buffer for the specified state, where [flags] is taken from the following list
+
+:ba[ll]             # Rearrange the screen to open one window for each buffer in the buffer list
+:bad[d] {name}      # Add file name {fname} to the buffer list, without loading it, if it wasn't listed yet
+:b[uffer] [N]       # Edit buffer [N] from the buffer list.  If [N] is not given, the current buffer remains being edited
+:b[uffer] {name}    # Edit buffer for {name} from the buffer lis
+:sb[uffer] [N]      # Split window and edit buffer [N] from the buffer list
+:sb[uffer] {name}   # Split window and edit buffer for |{bufname}| from the buffer list
+
+:bn[ext] [N]        # Go to [N]th next buffer in buffer list
+:bN[ext] [N]        # Go to [N]th previous buffer in buffer list
+:sbn[ext] [N]       # Split window and go to [N]th next buffer in buffer list
+:sbN[ext] [N]		# Split window and go to [N]th previous buffer in buffer list
+:bp[revious] [N]    # Go to [N]th previous buffer in buffer list
+:sbp[revious] [N]   # Split window and go to [N]th previous buffer in buffer list
+
+:br[ewind]          # Go to first buffer in buffer list
+:bf[irst]           # Go to first buffer in buffer list, Same as :brewind
+:sbr[ewind]         # Split window and go to first buffer in buffer list
+:sbf[irst]          # Same as :sbrewind
+:bl[ast]            # Go to last buffer in buffer list
+:sbl[ast]           # Split window and go to last buffer in buffer list
+
+:bm[odified] [N]    # Go to [N]th next modified buffer
+:sbm[odified] [N]	# Split window and go to [N]th next modified buffer
+
+:bd[elete] [N]      # Unload buffer [N] (default: current buffer) and delete it from the buffer list
+:bdelete[!] {name}  # Like ":bdelete [N]", but buffer given by name
+:N,Mbdelete         # Do ":bdelete" for all buffers in the range N to M inclusive
+:bun[load][!] [N]   # Unload buffer [N] (default: current buffer)
 ```
 
+[flags] can be a combination of the following characters: 
+
+| [flags] | description                                      |
+|:-------:|--------------------------------------------------|
+|    +    | modified buffers                                 |
+|    -    | buffers with 'modifiable' off                    |
+|    =    | readonly buffers                                 |
+|    a    | active buffers                                   |
+|    u    | unlisted buffers (overrides the "!")             |
+|    h    | hidden buffers                                   |
+|    x    | buffers with a read error                        |
+|    %    | current buffer                                   |
+|    #    | alternate buffer                                 |
+|    R    | terminal buffers with a running job              |
+|    F    | terminal buffers with a finished job             |
+|    ?    | terminal buffers without a job: `:terminal NONE` |
+|    t    | show time last used and sort buffers             |
 
 
-## Multi-window operation
+
+## Multi-windows
 
 > The split-screen window is based on the Ctrl+W shortcut key, Ctrl is the control function key, W stands for Windom, and Ctrl+W stands for control window.
 
@@ -728,7 +770,7 @@ Ctrl+W |            # Maximize the current window horizontally
 
 
 
-## Tags
+## Tab page
 
 ```bash
 :tabs               # Show all tabs
@@ -753,7 +795,7 @@ gT                  # Previous tab
 
 
 
-## Vim bookmarks
+## Marks
 
 ```bash
 :marks              # Show all bookmarks
@@ -770,7 +812,7 @@ ma                  # Save the current position to bookmark a, the lowercase let
 
 
 
-## Spell Check
+## Spell check
 
 ```bash
 :set spell          # Turn on spell check
@@ -784,7 +826,7 @@ z=                  # Spelling suggestion
 
 
 
-## Code folding
+## Fold commands
 
 ```bash
 zf{motion}          # Operator, manually define a fold (f:fold)
@@ -811,7 +853,7 @@ zO                  # Turn on all code folding under the cursor
 
 
 
-## Document encryption/decryption
+## File encryption/decryption
 
 > The document is encrypted. When you open the file, you will be prompted to enter the password twice in the lower left corner of the screen before you can operate. After saving the file and exiting, you must enter the normal password to open the file correctly, otherwise garbled characters will be displayed.
 
@@ -842,7 +884,7 @@ q                   # End recording macro
 @:                  # Repeat the last ex command (colon command)
 ```
 
-**Macro example**：You need to type a Tab key at the beginning of the following multi-line text to indent the beginning of the line.
+**Macro example**: You need to type a Tab key at the beginning of the following multi-line text to indent the beginning of the line.
 
 ```
 set nu
@@ -929,16 +971,16 @@ History command format:
 
 Parameter Description:
 
-- {name}：Specifies the history type.
-- {first}：Specifies the starting position of the command history, defaults to the first record.
-- {last}：Specifies where the command history ends, defaults to the last record.
+- {name}: Specifies the history type.
+- {first}: Specifies the starting position of the command history, defaults to the first record.
+- {last}: Specifies where the command history ends, defaults to the last record.
 
 In command line mode.
 ```bash
 :his[tory]                # View the history of all commands entered in the command line mode
 :his[tory] all            # Show all types of history
 :history c 1,5            # List the first to fifth command line history
-:history search or / or ？ # View search history 
+:history search or / or ? # View search history 
 :call histdel("")         # delete history
 :help :history            # See help for the :history command
 ```
@@ -985,7 +1027,7 @@ Ctrl+r registerName    # In insert mode (no need to enter register reference sym
 
 
 
-## Vim configuration file
+## Vim config file
 
 > Note: Vim configuration files are available in global and user versions, and user configuration files take precedence over global system configuration files.
 
@@ -998,7 +1040,7 @@ Ctrl+r registerName    # In insert mode (no need to enter register reference sym
 :echo $HOME         # Output the location of the user vimrc configuration file, stored in the user's home directory
 ```
 
-**Vim configuration instructions, please refer to [vimrc configuration file](../vimrc) for details. Note: Vim configuration can be set individually in command mode and only takes effect in the current window！**
+**Vim configuration instructions, please refer to [vimrc configuration file](../vimrc) for details. Note: Vim configuration can be set individually in command mode and only takes effect in the current window!**
 
 ```bash
 syntax              # List the defined grammar items
@@ -1036,58 +1078,38 @@ set all             # List all option settings
 
 ## Vim plugins
 
-**[vim-commentary](https://github.com/tpope/vim-commentary)**：Vim batch comment tool, you can comment multiple lines and remove multiple lines of comments.
+Appearance
+- [gruvbox](https://github.com/morhetz/gruvbox): Retro groove color scheme for Vim.
+- [vim-airline](https://github.com/vim-airline/vim-airline): Lean & mean status/tabline for vim that's light as air.
 
-```bash
-gcc                 # Comment the current line
-gc{motion}          # Annotate the area marked by {motion}, such as gcap annotate the entire paragraph
-gci{                # Comment the content in braces
-gc                  # Press gc to annotate the selected area under Visual Mode
-:7,17Commentary     # Comment lines 7 to 17
-```
+Development
+- [nerdcommenter](https://github.com/preservim/nerdcommenter): Vim plugin for intensely nerdy commenting powers.
+- [vim-repeat](https://github.com/tpope/vim-repeat): repeat.vim: enable repeating supported plugin maps with ".".
+- [vim-surround](https://github.com/tpope/vim-surround): surround.vim: Delete/change/add parentheses/quotes/XML-tags/much more with ease.
+- [vim-rainbow](https://github.com/frazrepo/vim-rainbow): Rainbow brackets for Vim.
+- [undotree](https://github.com/mbbill/undotree): The undo history visualizer for Vim.
 
+File management
+- [vim-startify](https://github.com/mhinz/vim-startify): The fancy start screen for Vim.
+- [nerdtree](https://github.com/preservim/nerdtree): A tree explorer plugin for Vim.
+- [nerdtree-git-plugin](https://github.com/Xuyuanp/nerdtree-git-plugin): A plugin of NERDTree showing git status.
 
+Markdown
+- [markdown-preview.vim](https://github.com/iamcco/markdown-preview.vim): markdown preview plugin for (neo)vim.
+- [vim-markdown](https://github.com/preservim/vim-markdown): Markdown Vim Mode
 
-**[NERDTree](https://github.com/preservim/nerdtree)**：This plugin is used to list the directory tree of the current path.
+Github
+- [vim-gitgutter](https://github.com/airblade/vim-gitgutter): A Vim plugin which shows git diff markers in the sign column and stages/previews/undoes hunks and partial hunks.
+- [vim-fugitive](https://github.com/tpope/vim-fugitive): fugitive.vim: A Git wrapper so awesome, it should be illegal.
 
-```bash
-?                   # Quick help document
-o                   # Open a directory or open a file, create a buffer, can also be used to open bookmarks
-go                  # Open a file, but the cursor remains in NERDTree, creating a buffer
-t                   # Open a file and create a Tab, which is also effective for bookmarks
-T                   # Open a file, but the cursor still stays in NERDTree. Tab is created, which is also effective for bookmarks
-i                   # Split the window to create the file horizontally, creating a buffer
-gi                  # Split the window where the file was created horizontally, but the cursor remains in NERDTree
-s                   # Split the window that creates the file vertically, creating a buffer
-gs                  # Similar to gi and go
-x                   # Collapse the currently open directory
-X                   # Collapse all open directories
-e                   # Open the selected directory by file management
-D                   # Delete bookmark
-P                   # Uppercase, jump to the current root path
-p                   # Lowercase, jump to the previous path where the cursor is located
-K                   # Jump to the first subpath
-J                   # Jump to the last subpath
-C                   # Set the root path to the directory where the cursor is
-u                   # Set the parent directory as the root path
-U                   # Set the parent directory to follow the path, but keep the original directory open
-r                   # Refresh the directory where the cursor is
-R                   # Refresh the current root path
-I                   # Show or not show hidden files
-f                   # Turn file filters on and off
-q                   # Close NERDTree
-A                   # Show NERDTree in full screen, or close full screen
-Ctrl+j Ctrl+k       # Move between directories and files at the same level, ignoring subdirectories and subfiles 
-```
+Search
+- [LeaderF](https://github.com/Yggdroot/LeaderF): An efficient fuzzy finder that helps to locate files, buffers, mrus, gtags, etc. on the fly for both vim and neovim.
+- [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim): Fuzzy file, buffer, mru, tag, etc finder.
+- [tagbar](https://github.com/preservim/tagbar): Vim plugin that displays tags in a window, ordered by scope.
+- [vim-easymotion](https://github.com/easymotion/vim-easymotion): Vim motions on speed.
 
-
-
-**[asyncrun.vim](https://github.com/skywind3000/asyncrun.vim)**：The plug-in uses the asynchronous mechanism of Vim 8 / NeoVim, allowing you to run Shell commands in the background and display the results in Vim's Quickfix window in real time.
-
-```bash
-:AsyncRun ls        # Run the command ls asynchronously and output the result to quickfix. Use :copen to view
-:AsyncRun -raw ls   # Run the command asynchronously, the result of ls does not match errorformat
-```
+Other
+- [asyncrun.vim](https://github.com/skywind3000/asyncrun.vim): Run Async Shell Commands in Vim 8.0 / NeoVim and Output to the Quickfix Window.
 
 
 
@@ -1103,10 +1125,10 @@ Command line mode   # Press : or / or ? To start
 
 
 
-## External command
+## Various commands
 
 ```bash
-:!{command}         # Execute a one-time Shell command, the following command: :!pwd, change the directory in the current Vim mode
+:!{cmd}             # Execute a one-time Shell command, the following command: :!pwd, change the directory in the current Vim mode
 :!!                 # Re-execute the most recently run command
 :sh[ell]            # Start an interactive Shell to execute multiple commands, the exit command exits and returns to Vim
 :!ls                # Run the external command ls and wait for the return
@@ -1135,7 +1157,7 @@ Command line mode   # Press : or / or ? To start
 
 
 
-## Help information
+## Help commands
 
 ```bash
 :h[elp] {command}   # To display the help of related commands, you can also enter :help instead of the command. To exit the help, you need to enter :q
@@ -1162,23 +1184,23 @@ Command line mode   # Press : or / or ? To start
 
 
 
-## Internet resources
+## Resources
 
-- Latest Versions of Vim：https://github.com/vim/vim
-- Windows version：https://github.com/vim/vim-win32-installer/releases
-- Plug-in browsing：http://vimawesome.com
-- Set the Alt key correctly：http://www.skywind.me/blog/archives/2021
-- Video tutorial：http://vimcasts.org/
-- Chinese help：http://vimcdoc.sourceforge.net/doc/help.html
-- Chinese version entry to proficiency：https://github.com/wsdjeg/vim-galore-zh_cn
-- Getting started with a five-minute script：http://www.skywind.me/blog/archives/2193
-- Script mastery：http://learnvimscriptthehardway.stevelosh.com/
-- 16 years of experience：http://zzapper.co.uk/vimtips.html
-- coloring scheme：http://vimcolors.com/
+- Latest Versions of Vim: https://github.com/vim/vim
+- Windows version: https://github.com/vim/vim-win32-installer/releases
+- Plug-in browsing: http://vimawesome.com
+- Set the Alt key correctly: http://www.skywind.me/blog/archives/2021
+- Video tutorial: http://vimcasts.org/
+- Chinese help: http://vimcdoc.sourceforge.net/doc/help.html
+- Chinese version entry to proficiency: https://github.com/wsdjeg/vim-galore-zh_cn
+- Getting started with a five-minute script: http://www.skywind.me/blog/archives/2193
+- Script mastery: http://learnvimscriptthehardway.stevelosh.com/
+- 16 years of experience: http://zzapper.co.uk/vimtips.html
+- coloring scheme: http://vimcolors.com/
 
 
 
-## Vim usage suggestions
+## Suggestions
 
 - Never use Ctrl+C instead of <Esc>. It has a completely different meaning and is easy to mistakenly interrupt the running background script.
 - Many people use Ctrl+[ instead of <Esc>, the little finger of the left hand is Ctrl, and the little finger of the right hand [ is very convenient after being proficient.
@@ -1215,7 +1237,7 @@ Command line mode   # Press : or / or ? To start
 
 
 
-## Reference
+## References
 
 - https://github.com/skywind3000/awesome-cheatsheets/blob/master/editors/vim.txt
 - http://blog.g-design.net/post/4789778607/vim-cheat-sheet

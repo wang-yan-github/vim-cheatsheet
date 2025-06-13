@@ -459,7 +459,6 @@ Plug 'preservim/nerdtree'                " 显示 Vim 目录树插件，常与 T
 Plug 'Xuyuanp/nerdtree-git-plugin'       " 显示 NERDTree 目录树的 Git 状态信息 
 
 " Markdown
-Plug 'iamcco/mathjax-support-for-mkdp'   " 用于 Markdown 预览数学公式
 Plug 'iamcco/markdown-preview.vim'       " Markdown 预览工具
 Plug 'plasticboy/vim-markdown'           " Markdown 语法高亮插件。提供了语法高亮，段落折叠，查看目录(:Toc)，段间跳转等功能
 

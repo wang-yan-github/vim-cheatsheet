@@ -14,7 +14,7 @@
 
 - [Vim-cheatsheet - GitHub](https://github.com/chloneda/vim-cheatsheet) | [Vim-cheatsheet - Gitee](https://gitee.com/chloneda/vim-cheatsheet)
 - [Vim 官网](https://www.vim.org/) | [Vim GitHub](https://github.com/vim/vim) | [Vim 中文文档](http://vimcdoc.sourceforge.net/doc/help.html)
-- [Vim 自定义跨平台配置文件 vimrc](./vimrc) | [Vim 体系化工具集](resources/vim-tools.md)
+- [Vim 跨平台配置文件 vimrc](./vimrc) | [Vim 体系化工具集](resources/vim-tools.md)
 
 
 
@@ -77,7 +77,7 @@
 N{command}          # 重复某个命令 N 次，例如：10k，光标上移 10 行
 ```
 
-善用宏和正则表达式，同样可以达到减少重复操作的目的。
+Tips: 善用宏和正则表达式，同样可以达到减少重复操作的目的。
 
 
 
@@ -432,8 +432,10 @@ gqap                      # 重排当前段落
 gq[N]ap                   # 重排 N 个段落
 gq[N]j                    # 重排当前行和下面 N 行
 gqQ                       # 重排当前段落到文章末尾
-J                         # 将多行合并为一行
-gj                        # 将多行合并为一行，且合并后不留空格
+J                         # 将两行合并为一行，行之间带空格
+[N]J                      # 将 N 多行合并为一行，行之间带空格
+{visual}J		          # 可视模式下将多行合并为一行
+g+Shift+j                 # 将两行合并为一行，且合并后不留空格
 ==                        # 自动缩进，当前文件所有行自动缩进对齐使用 gg=G
 ```
 
@@ -482,8 +484,8 @@ yG                  # 复制光标以下的所有行
 yypVr{char}         # 复制字符并替换为等长指定字符，Markdown 编辑时尤为好用
 :[range]y           # 复制范围，例如 :20,30y 是复制 20 到 30 行，:10y 是复制第 10 行
 :[range]d           # 删除范围，例如 :20,30d 是删除（剪切） 20 到 30 行，:10d 是删除（剪切）第 10 行
-"_[command]         # 使用 [command] 删除内容，并且不进行复制（不会污染寄存器）
-"*[command]         # 使用 [command] 复制内容到系统剪贴板（需要 Vim 版本有 clipboard 支持）
+"_[cmd]             # 使用 [cmd] 删除内容，并且不进行复制（不会污染寄存器）
+"*[cmd]             # 使用 [cmd] 复制内容到系统剪贴板（需要 Vim 版本有 clipboard 支持）
 ```
 
 
@@ -905,20 +907,32 @@ vim -d -o lfile rfile     # 横向分割窗口比较文件
 :buffers            # 查看缓冲区列表，同上
 :ls [flags]         # 查看指定状态的缓冲区，其中 [flags] 参考下面列表取值
 
-:ball               # 为每个缓冲区打开一个窗口
+:ba[ll]             # 为每个缓冲区打开一个窗口
 :bad[d] {name}      # 将名称为 name 的文件添加到缓冲区列表
 :b[uffer] [N]       # 打开指定缓存编号的缓冲区
 :b[uffer] {name}    # 打开名称为 name 的缓冲区
 :sb[uffer] [N]      # 纵向分割打开指定缓存编号的缓冲区
 :sb[uffer] {name}   # 纵向分割打开名称为 name 的缓冲区
 
-:bn[ext]            # 切换到下一个缓冲区
-:bN[ext]            # 切换到上一个缓冲区
-:bp[revious]        # 切换到上一个缓冲区，同上
-:bf[irst]           # 切换到第一个缓冲区
+:bn[ext] [N]        # 切换到下 N 个缓冲区，N 缺省时，切换到下一个缓冲区
+:bN[ext] [N]        # 切换到上 N 个缓冲区，N 缺省时，切换到上一个缓冲区
+:sbn[ext] [N]       # 纵向分割窗口并转到缓冲区列表中的下 N 个缓冲区
+:sbN[ext] [N]		# 纵向分割窗口并转到缓冲区列表中的前 N 个缓冲区
+:bp[revious] [N]    # 切换到缓冲区列表中的前 N 个缓冲区
+:sbp[revious] [N]   # 纵向分割窗口并转到缓冲区列表中的前 N 个缓冲区
+
+:br[ewind]          # 切换到第一个缓冲区
+:bf[irst]           # 切换到第一个缓冲区，等效于 :brewind
+:sbr[ewind]         # 纵向分割窗口切换到第一个缓冲区
+:sbf[irst]          # 等效于 :sbrewind
 :bl[ast]            # 切换到最后一个缓冲区
+:sbl[ast]           # 纵向分割窗口切换到最后一个缓冲区
+
+:bm[odified] [N]    # 切换到下 N 个可更改的缓冲区
+:sbm[odified] [N]	# 纵向窗口切换到下 N 个可更改的缓冲区
 
 :bd[elete] [N]      # 删除指定 N 编号的缓冲区
+:bdelete[!] {name}  # 删除指定 name 名称的缓冲区，可等效于 :bdelete [N]
 :N,Mbdelete         # 删除指定范围的缓冲区，例如 :3,5bdelete 表示删除缓存编号在 3~5 范围的缓冲区
 :bun[load][!] [N]   # 卸载缓冲区，! 代表是否强制卸载缓冲区
 N Ctrl+^            # 切换缓冲区，先输入缓存编号，再按 Ctrl+^
@@ -1458,8 +1472,37 @@ nnoremap gl $       # 普通模式下按 gl 键进行行尾跳转，代替数字
 
 ## 常用插件
 
-- [vim-commentary](https://github.com/tpope/vim-commentary)：批量注释工具，可以注释多行和去除多行注释。
-- [NERDTree](https://github.com/preservim/nerdtree)：插件用于列出当前路径的目录树。
+外观插件
+- [gruvbox](https://github.com/morhetz/gruvbox)：界面配色方案。
+- [vim-airline](https://github.com/vim-airline/vim-airline)：Vim 状态栏，提供更优秀的显示功能。
+
+开发插件
+- [nerdcommenter](https://github.com/preservim/nerdcommenter)：Vim 批量注释工具。
+- [vim-repeat](https://github.com/tpope/vim-repeat)：解决 Vim 原生命令 . 在自定义映射或插件映射时无法重复的问题。
+- [vim-surround](https://github.com/tpope/vim-surround)：添加，修改，删除括号、引号等成对的符号，甚至是 HTML 标签。
+- [vim-rainbow](https://github.com/frazrepo/vim-rainbow)：彩虹括号。
+- [undotree](https://github.com/mbbill/undotree)：提供强大的撤销更改功能。
+
+文件管理插件
+- [vim-startify](https://github.com/mhinz/vim-startify)：Vim 启动插件。
+- [nerdtree](https://github.com/preservim/nerdtree)：显示 Vim 目录树插件，常与 Tarbar、Ctrlp 搭配使用。
+- [nerdtree-git-plugin](https://github.com/Xuyuanp/nerdtree-git-plugin)：显示 NERDTree 目录树的 Git 状态信息。
+
+Markdown 插件
+- [markdown-preview.vim](https://github.com/iamcco/markdown-preview.vim)：Markdown 预览工具。
+- [vim-markdown](https://github.com/preservim/vim-markdown)：Markdown 语法高亮插件。提供了语法高亮，段落折叠，查看目录(:Toc)，段间跳转等功能。
+
+Github 插件
+- [vim-gitgutter](https://github.com/airblade/vim-gitgutter)：Git 侧边栏插件。
+- [vim-fugitive](https://github.com/tpope/vim-fugitive)：在 Vim 中使用 Git 命令的插件。
+
+搜索插件
+- [LeaderF](https://github.com/Yggdroot/LeaderF)：内容、文件、缓冲区和标签模糊搜索插件，替代 Ctrlp。
+- [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim)：内容、文件、缓冲区和标签模糊搜索插件。
+- [tagbar](https://github.com/preservim/tagbar)：侧边栏显示文件中定义的常量、变量、函数等，善于 Shift + ? 查看帮助。
+- [vim-easymotion](https://github.com/easymotion/vim-easymotion)：快速定位。
+
+其他插件
 - [asyncrun.vim](https://github.com/skywind3000/asyncrun.vim)：插件使用 Vim 8、NeoVim 的异步机制，让你在后台运行 Shell 命令，并将结果实时显示到 Vim 的 Quickfix 窗口中。
 
 
@@ -1481,7 +1524,7 @@ Ex 模式             # 按 Q 字母键进入 Ex 模式，与命令行模式类�
 ## 外部命令
 
 ```bash
-:!{command}         # 执行一次性 Shell 命令，例如 :!pwd，输出当前 Vim 模式下所处目录路径
+:!{cmd}             # 执行一次性 Shell 命令，例如 :!pwd，输出当前 Vim 模式下所处目录路径
 :!!                 # 重新执行最近一次运行过的命令
 :sh[ell]            # 启动一个交互的 Shell 执行多个命令，不需要退出Vim。exit 命令退出并返回 Vim
 :!ls                # 运行外部命令 ls，并等待返回
@@ -1575,8 +1618,9 @@ Ex 模式             # 按 Q 字母键进入 Ex 模式，与命令行模式类�
 :cc [N]             # 显示第 N 个错误的详细信息
 :cn[ext]            # 定位到 Quickfix 窗口中下一个错误
 :cp[rev]            # 定位到 Quickfix 窗口中上一个错误
-:cold[er]           # 到前一个旧列表
-:cnew               # 到后一个新列表
+:cold[er]           # 到前一个旧错误列表
+:cnew[er]           # 到后一个新错误列表
+:cnew[er] [count]   # 转到较新的错误列表。当给出 count 时，执行 count 次；当已进入最新错误列表时，将给出错误信息
 ```
 
 
@@ -1617,7 +1661,7 @@ Ex 模式             # 按 Q 字母键进入 Ex 模式，与命令行模式类�
 ## 帮助信息
 
 ```bash
-:h[elp] {command}   # 显示相关命令的帮助，也可以就输入 :help 而不跟命令，退出帮助需要输入 :q
+:h[elp] {cmd}       # 显示相关命令的帮助，也可以就输入 :help 而不跟命令，退出帮助需要输入 :q
 :h tutor            # 入门文档
 :h quickref         # 快速帮助
 :h index            # 查询 Vim 所有键盘命令定义
@@ -1710,8 +1754,8 @@ Ctrl+{char}         # 作为控制字符输入的 {char}；即按住 Ctrl 键再
 <S-Right>           # Shift ＋ 光标右移键
 <C-Left>            # Ctrl ＋ 光标左移键
 <C-Right>           # Ctrl ＋ 光标右移键
-<F1>-<F12>          # 功能键 1 到 12
-<S-F1>-<S-F12>      # Shift ＋ 功能键 1 到 12 
+<F1>~<F12>          # 功能键 1 到 12
+<S-F1>~<S-F12>      # Shift ＋ 功能键 1 到 12 
 <Help>              # 帮助键
 <Undo>              # 撤销键
 <Insert>            # Insert 键
@@ -1730,7 +1774,7 @@ Ctrl+{char}         # 作为控制字符输入的 {char}；即按住 Ctrl 键再
 <kDivide>           # 小键盘 /
 <kEnter>            # 小键盘 Enter
 <kPoint>            # 小键盘 小数点
-<k0>-<k9>           # 小键盘 0 到 9
+<k0>~<k9>           # 小键盘 0 到 9
 
 <S-...>             # Shift ＋ 其它键
 <C-...>             # Ctr ＋ 其它键
@@ -1758,7 +1802,7 @@ Ctrl+{char}         # 作为控制字符输入的 {char}；即按住 Ctrl 键再
 
 ## 使用建议
 
-- 多使用 :h[elp] {command} 获取显示相关命令的帮助文档，提高相关命令的认识水平。
+- 多使用 :h[elp] {cmd} 获取显示相关命令的帮助文档，提高相关命令的认识水平。
 - 永远不要用 Ctrl+C 代替 <Esc> 完全不同的含义，容易错误中断运行的后台脚本。
 - 很多人使用 Ctrl+[ 代替 <Esc>，左手小指 Ctrl，右手小指 [ 熟练后很方便。
 - 某些终端中使用 Vim 8 内嵌终端如看到奇怪字符，使用 :set t_RS= t_SH= 解决。
